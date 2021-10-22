@@ -1,0 +1,14 @@
+dump in
+push 1
+push @height
+sub #if height is 1, @1 should be 0
+swap
+while @temp
+	add #add the next 2 members
+	push 1   #take 1 off the size and put it back in @1
+	swap
+	sub
+	swap
+	.
+pop output 0
+return

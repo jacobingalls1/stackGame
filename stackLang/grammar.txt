@@ -1,0 +1,18 @@
+Program -> StmtBlock Returnst
+StmtBlock -> Stmts lambda
+Stmts -> Stmt Stmts | lambda
+Stmt -> Splitst | Whilest | Ifst | Op
+Splitst -> split numberLiteral* Op_ . Op_ . Splitclose .
+Splitclose -> swap | stack | merge
+Whilest -> while Signal StmtBlock .
+Ifst -> if Signal StmtBlock . Elsest_
+Elsest -> else StmtBlock .
+Returnst -> return
+Op -> ArithmeticOp | PushOp | PopOp | rotate | dump in | dump out
+PushOp -> push input_ numberLiteral* | push @ SignalName
+PopOp -> pop output_ numberLiteral* | pop @ SignalName
+ArithmeticOp -> add | sub | neg | and | not | or | gt | lt | eq | swap | SymbolicOp
+SymbolicOp -> + | - | ~ | & | ! | v | > | < | = | x
+Signal -> numberLiteral* | @ SignalName
+SignalName -> KeySource
+KeySource -> height | top | temp
