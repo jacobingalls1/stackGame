@@ -43,11 +43,12 @@ class Rule:
         ret = []
         for i in self.rhs:
             for j in range(len(i)):
-                if i[j][-1] == '_':
+                if type(i[j]) is str and i[j][-1] == '_':
                     if j<len(i)-1:
-                        ret.append((i[j], i[j+1]))
+                        ret.append((i[j][:-1], i[j+1]))
                     else:
-                        ret.append(i[j])
+                        ret.append(self.lhs)
+        return ret
 
     def findAfterNT(self, nt):
         ret = [False]
@@ -58,6 +59,7 @@ class Rule:
                         ret.append(i[j])
                     else:
                         ret[0] = True
+        return ret
 
 
     
@@ -87,6 +89,14 @@ def table(grammarFile):
                 first = r.lhs
     undefinedNT = list(rules.values())
     good = True
+    optional = []
+    for r in rules.values():
+        optional += r.optional()
+    lmbda = [o for o in optional if type(o) is str]
+    for l in lmbda:
+
+    optional = [o for o in optional if type(o) is tuple]
+
     while good:
         good = False
         for r in undefinedNT:
@@ -95,21 +105,30 @@ def table(grammarFile):
                 good = True
                 r.defined = True
                 undefinedNT.remove(r)
-    good = True
-#    while good:
- #       good = False
-  #      optional = []
-   #     for r in self.rules:
-    #        optional += r.optional()
-     #   updateTable(table, r, rules)
-      #  good = True
-       # r.defined = True
-        #undefinedNT.remove(r)
+
+        for o in optional:
+            if type(o[1]) is Token:
+                table[o[0]][o[1]] = [o[1]]
+            else:
+                k = list(table[o[0]].keys())
+                intersect = list(set(k)|set(table[o[1]].keys()))
+                if intersect:
+                    print("Collision in the %s rule over the %s terminal(s)"%(o[0], str(intersect)))
+                    exit(1)
+                table[o[0]].update(table[o[1]])
+                if list(set(table[o[0]].keys())-set(k)):
+                    good = True
+    for r in table.keys():
+        for k in table[r].keys():
+            for i in range(len(table[r][k])):
+                if type(table[r][k][i]) is str and table[r][k][i][-1] == '_':
+                    table[r][k][i] = table[r][k][i][:-1]
 
 
-    if not rules[first].fullyDefined(rules):
+    if not rules[first].defined:
         print('Failed to define %s from the CFG file'%first)
         exit(1)
+
     return table
 
 

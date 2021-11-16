@@ -1,16 +1,16 @@
-Program -> StmtBlock Returnst
-StmtBlock -> Stmts lambda
-Stmts -> Stmt Stmts | lambda
+Program -> Stmts Returnst
+Stmts -> Stmt Stmts_
 Stmt -> Splitst | Whilest | Ifst | Op
 Splitst -> split numberLiteral* Op_ . Op_ . Splitclose .
 Splitclose -> swap | stack | merge
-Whilest -> while Signal StmtBlock .
-Ifst -> if Signal StmtBlock . Elsest_
-Elsest -> else StmtBlock .
+Whilest -> while Signal Stmts .
+Ifst -> if Signal Stmts . Elsest_
+Elsest -> else Stmts .
 Returnst -> return
-Op -> ArithmeticOp | PushOp | PopOp | rotate | dump in | dump out
-PushOp -> push input_ numberLiteral* | push @ SignalName
-PopOp -> pop output_ numberLiteral* | pop @ SignalName
+Op -> ArithmeticOp | push PushOp | pop PopOp | rotate | dump IO
+IO -> in | out
+PushOp -> numberLiteral* | @ SignalName | input numberLiteral*
+PopOp -> numberLiteral* | @ SignalName | output numberLiteral*
 ArithmeticOp -> add | sub | neg | and | not | or | gt | lt | eq | swap | SymbolicOp
 SymbolicOp -> + | - | ~ | & | ! | v | > | < | = | x
 Signal -> numberLiteral* | @ SignalName

@@ -4,7 +4,7 @@ import sys
 
 symbol = '@.+-~&v!><=x'
 
-keyword = r'split|swap|stack|merge|while|if|else|return|push|input|output|pop|rotate|add|sub|and|not|or|gt|eq|swap|height|top|temp|dump|in|out|lambda'
+keyword = r'split|swap|stack|merge|while|if|else|return|push|input|output|pop|rotate|add|sub|and|not|or|gt|eq|swap|height|top|temp|dump|in|out'
 
 numberLiteral = r'0|-?[1-9][0-9]*'
 
@@ -79,8 +79,8 @@ def tokenize(program):
                     print('Tokenizing error on line %i,'%lineCount, line)
                     exit(1)
             ret+=l
-
         lineCount += 1
+    ret.append([Token('control', 'EOF', -1)])
     return ret
 
 
