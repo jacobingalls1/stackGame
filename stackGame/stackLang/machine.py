@@ -229,7 +229,7 @@ class StackMachine:
 
     def importst(self, tree):
         try:
-            self.runProgram(*self.getProgram(program=self.workingDir + '/' + tree.children[1].content))
+            print(self.getProgram(program=self.workingDir + '/' + tree.children[1].content))
         except FileNotFoundError:
             raise RuntimeError('Line %i: Attempted to import %s, could not find file'%(tree.children[0].line, tree.children[1].content))
 
@@ -259,7 +259,7 @@ class StackMachine:
         elif tree.content.symbol == 'Importst':
             self.importst(tree)
         else:
-            raise Exception("runtime error, unknown name: %s"%tree.content.symbol)
+            raise Exception("runtime error, unknown name: %s" % tree.content.symbol)
 
     def runProgram(self, program, workingDir):
         self.workingDir = workingDir
@@ -268,7 +268,7 @@ class StackMachine:
             if self.returned:
                 self.returned = False
                 if not self.stack:
-                    raise Exception('Tried to return from empty stack, line %i'%c.line())
+                    raise Exception('Tried to return from empty stack, line %i' % c.line())
                 break
         return
 
@@ -294,5 +294,5 @@ class StackMachine:
 
 
 SM = StackMachine()
-SM.runProgram(*SM.getProgram(program='examples/import.stack'))
+SM.runProgram(*SM.getProgram())
 SM.print()

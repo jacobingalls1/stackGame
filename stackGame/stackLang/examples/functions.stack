@@ -33,8 +33,7 @@ fun triangle 1 1 #returns the @top-th triangle number
         push @temp
         .
     stacksum
-    return
-    .
+    return.
 
 
 fun fibDone 1 1
