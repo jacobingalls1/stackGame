@@ -1,0 +1,27 @@
+routine stacksum
+    push 1
+    push 0
+    pop @temp
+    push @height
+    sub
+    while @top
+        pop output 0
+        push @temp
+        add
+        pop @temp
+        push 1
+        push @height
+        sub
+        .
+    push @temp
+    return
+    .
+
+push 1
+push 5
+push 4
+stacksum
+push 10
+eq
+test
+.

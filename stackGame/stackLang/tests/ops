@@ -1,0 +1,19 @@
+# op [*stack] [*expectedstack] @temp?
+add [3,2] [5]
+sub [3,2] [-1]
+and [3,2] [1]
+and [3,0] [0]
+or [3,0] [1]
+or [0,0] [0]
+gt [3,2] [0]
+gt [2,3] [1]
+lt [3,2] [1]
+lt [3,3] [0]
+eq [3,2] [0]
+eq [0,0] [1]
+
+#unary
+neg [1] [-1]
+not [1] [0]
+swap [1] [2] 2
+rotate [1,2] [2,1]

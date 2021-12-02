@@ -1,0 +1,33 @@
+#multiplies two elements, a,b
+push input 1
+swap
+pop output 0
+push @temp
+push @height
+sub
+push 1
+neg
+add
+while @top
+    pop output 0
+    push input 0
+    push @temp
+    push @height
+    sub
+    push 1
+    neg
+    add
+    .
+pop output 0
+push 1
+push @height
+sub
+while @top
+    pop output 0
+    add
+    push 2
+    push @height
+    sub
+    .
+pop output 0
+.

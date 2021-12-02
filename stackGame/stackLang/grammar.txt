@@ -1,0 +1,24 @@
+Program -> Stmts $
+Stmts -> Stmt Stmts | .
+Stmt -> Splitst | Whilest | Ifst | Op | FunDec | RoutineDec | Returnst | Importst
+Splitst -> split Signal Op1_ . Op2_ . Splitclose
+Splitclose -> reverse | stack | merge
+Whilest -> while Signal Stmts
+Ifst -> if Signal Stmts Elsest
+Elsest -> else Stmts | nil
+FunDec -> fun name* numberLiteral* numberLiteral* Stmts
+RoutineDec -> routine name* Stmts
+Returnst -> return
+Importst -> import fname*
+Op1_ -> Op | nil
+Op2_ -> Op | nil
+Op -> ArithmeticOp | push PushOp | pop PopOp | FunCall
+PushOp -> numberLiteral* | @ SignalName | input numberLiteral*
+PopOp -> output numberLiteral* | @ SignalName
+ArithmeticOp -> BinaryOp | UnaryOp
+BinaryOp -> add | sub | and | or | gt | lt | eq | + | - | & | % | > | < | =
+UnaryOp -> neg | not | swap | rotate | test | ~ | ! | # | ^ | /
+Signal -> numberLiteral* | @ SignalName | FunCall
+FunCall -> name*
+SignalName -> KeySource
+KeySource -> height | top | temp

@@ -1,0 +1,399 @@
+RUNNING add NOW
+grammar.txt
+ Program
+	 NTBinaryOp
+		 (keyword, add, 1)
+ Stack: [3, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: [3]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING sub NOW
+grammar.txt
+ Program
+	 NTBinaryOp
+		 (keyword, sub, 1)
+ Stack: [3, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: [3]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING and NOW
+grammar.txt
+ Program
+	 NTBinaryOp
+		 (keyword, and, 1)
+ Stack: [3, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: [3]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING and NOW
+grammar.txt
+ Program
+	 NTBinaryOp
+		 (keyword, and, 1)
+ Stack: [3, 0]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: [3]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING or NOW
+grammar.txt
+ Program
+	 NTBinaryOp
+		 (keyword, or, 1)
+ Stack: [3, 0]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: [3]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING or NOW
+grammar.txt
+ Program
+	 NTBinaryOp
+		 (keyword, or, 1)
+ Stack: [0, 0]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: [0]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING gt NOW
+grammar.txt
+ Program
+	 NTBinaryOp
+		 (keyword, gt, 1)
+ Stack: [3, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: [3]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING gt NOW
+grammar.txt
+ Program
+	 NTBinaryOp
+		 (keyword, gt, 1)
+ Stack: [2, 3]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: [2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING lt NOW
+grammar.txt
+ Program
+	 NTBinaryOp
+		 (keyword, lt, 1)
+ Stack: [3, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: [3]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING lt NOW
+grammar.txt
+ Program
+	 NTBinaryOp
+		 (keyword, lt, 1)
+ Stack: [3, 3]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: [3]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING eq NOW
+grammar.txt
+ Program
+	 NTBinaryOp
+		 (keyword, eq, 1)
+ Stack: [3, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: [3]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING eq NOW
+grammar.txt
+ Program
+	 NTBinaryOp
+		 (keyword, eq, 1)
+ Stack: [0, 0]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: [0]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING neg NOW
+grammar.txt
+ Program
+	 NTUnaryOp
+		 (keyword, neg, 1)
+ Stack: [1]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING not NOW
+grammar.txt
+ Program
+	 NTUnaryOp
+		 (keyword, not, 1)
+ Stack: [1]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING swap NOW
+grammar.txt
+ Program
+	 NTUnaryOp
+		 (keyword, swap, 1)
+ Stack: [1]
+ Temp: 2
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+ Stack: []
+ Temp: 2
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+RUNNING rotate NOW
+grammar.txt
+ Program
+	 NTUnaryOp
+		 (keyword, rotate, 1)
+ Stack: [1, 2]
+ Temp: 1
+ Outputs: {0: 0, 1: 0}
+ Inputs: {0: 3, 1: 6}
+
+line: push 5 | [1,2] [1,2,5] 0 {1:2} {0:0,1:0}
+RUNNING push 5 NOW
+outputs {0: 0, 1: 0}
+grammar.txt
+ Program
+	 NTPushOp
+		 (numberLiteral*, 5, 1)
+ Stack: [1, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {1: 2}
+
+line: push @top | [1,2] [1,2,2] 0 {1:2} {0:0,1:0}
+RUNNING push @top NOW
+outputs {0: 0, 1: 0}
+grammar.txt
+ Program
+	 NTPushOp
+		 (symbol, @, 1)
+		 (keyword, top, 1)
+ Stack: [1, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {1: 2}
+
+line: push input 1 | [1,2] [1,2,3] 0 {1:3} {0:0,1:0}
+RUNNING push input 1 NOW
+outputs {0: 0, 1: 0}
+grammar.txt
+ Program
+	 NTPushOp
+		 (keyword, input, 1)
+		 (numberLiteral*, 1, 1)
+ Stack: [1, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {1: 3}
+
+line: push @temp | [1,2] [1,2,0] 0 {1:3} {0:0,1:0}
+RUNNING push @temp NOW
+outputs {0: 0, 1: 0}
+grammar.txt
+ Program
+	 NTPushOp
+		 (symbol, @, 1)
+		 (keyword, temp, 1)
+ Stack: [1, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {1: 3}
+
+line: push @height | [1,2] [1,2,2] 0 {1:3} {0:0,1:0}
+RUNNING push @height NOW
+outputs {0: 0, 1: 0}
+grammar.txt
+ Program
+	 NTPushOp
+		 (symbol, @, 1)
+		 (keyword, height, 1)
+ Stack: [1, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {1: 3}
+
+line: pop output 0 | [1,2] [1] 0 {1:2} {0:0,1:0}
+RUNNING pop output 0 NOW
+outputs {0: 0, 1: 0}
+grammar.txt
+ Program
+	 NTPopOp
+		 (keyword, output, 1)
+		 (numberLiteral*, 0, 1)
+ Stack: [1, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {1: 2}
+
+line: pop output 1 | [1,2] [1] 0 {1:2} {0:0,1:2}
+RUNNING pop output 1 NOW
+outputs {0: 0, 1: 0}
+grammar.txt
+ Program
+	 NTPopOp
+		 (keyword, output, 1)
+		 (numberLiteral*, 1, 1)
+ Stack: [1, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {1: 2}
+
+line: pop @temp | [1,2] [1] 0 {1:2} {0:0,1:0}
+RUNNING pop @temp NOW
+outputs {0: 0, 1: 0}
+grammar.txt
+ Program
+	 NTPopOp
+		 (symbol, @, 1)
+		 (keyword, temp, 1)
+ Stack: [1, 2]
+ Temp: 0
+ Outputs: {0: 0, 1: 0}
+ Inputs: {1: 2}
+
+grammar.txt

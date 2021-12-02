@@ -1,0 +1,71 @@
+routine stacksum
+    push 1
+    push 0
+    pop @temp
+    push @height
+    sub
+    while @top
+        pop output 0
+        push @temp
+        add
+        pop @temp
+        push 1
+        push @height
+        sub
+        .
+    push @temp
+    sub
+    return
+    .
+
+routine clear
+    stacksum
+    pop output 0.
+
+fun triangle 1 1 #returns the @top-th triangle number
+    pop @temp
+    push @temp
+    while @top #enter with height 1
+        push 1
+        push @temp
+        sub
+        pop @temp
+        push @temp
+        .
+    stacksum
+    return
+    .
+
+
+fun fibDone 1 1
+    push @top
+    push @top
+    push 1
+    eq
+    if @top
+        push 1
+        return.
+    eq
+    return.
+
+
+fun fib 1 1
+    push @top
+    fibDone
+    if @top
+        push 1
+        return.
+    pop output 0
+    pop @temp
+    push 1
+    push @temp
+    sub
+    push 2
+    push @temp
+    sub
+    fib
+    rotate
+    fib
+    add
+    return.
+.
