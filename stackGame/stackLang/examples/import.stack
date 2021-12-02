@@ -1,0 +1,8 @@
+import functions.stack
+
+push 10
+fib
+push 89
+eq
+test
+.
