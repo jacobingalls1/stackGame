@@ -1,26 +1,4 @@
-routine stacksum
-    push 1
-    push 0
-    pop @temp
-    push @height
-    sub
-    while @top
-        pop output 0
-        push @temp
-        add
-        pop @temp
-        push 1
-        push @height
-        sub
-        .
-    push @temp
-    sub
-    return
-    .
 
-routine clear
-    stacksum
-    pop output 0.
 
 fun triangle 1 1 #returns the @top-th triangle number
     pop @temp
@@ -67,4 +45,5 @@ fun fib 1 1
     fib
     add
     return.
+
 .

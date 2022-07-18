@@ -1,6 +1,5 @@
 import sys
-from lexer import Token, Lexer
-from collections import defaultdict
+from stackLang.lexer import Token, Lexer
 
 
 class Nonterminal():
@@ -63,8 +62,8 @@ class Nonterminal():
 class Rule:
     NTs = {}
 
-    def __init__(self, lhs, rhs):
-        lexer = Lexer('')
+    def __init__(self, lhs, rhs, tokenf):
+        lexer = Lexer('', tokenf)
         self.rhs = [i.split(' ') for i in rhs.split(' | ')]
         if lhs not in Rule.NTs.keys():
             Rule.NTs[lhs] = Nonterminal(lhs)
@@ -79,24 +78,23 @@ class Rule:
                     i[j] = lexer.matchToken(i[j])
 
     def __repr__(self):
-        return self.lhs + ' -> ' + str(self.rhs)
+        return str(self.lhs) + ' -> ' + str(self.rhs)
 
     @staticmethod
     def getNTs():
         return Rule.NTs
 
 
-def getRules(rulesFile):
+def getRules(rulesFile, tokenf):
     rulesList = {}
-    print(rulesFile)
     with open(rulesFile, 'r') as rules:
         for line in rules:
-            rulesList[line.split(' -> ')[0]] = Rule(*line.strip().split(' -> '))
+            rulesList[line.split(' -> ')[0]] = Rule(*line.strip().split(' -> '), tokenf)
     return rulesList
 
 
-def getTable(rulesFile):
-    rules = getRules(rulesFile)
+def getTable(rulesFile, tokenf):
+    rules = getRules(rulesFile, tokenf)
     nonterminals = Rule.getNTs()
     table = {nt: nt.first(rules) for nt in nonterminals.values()}  # first() returns a dictionary
     for nt in nonterminals.values():

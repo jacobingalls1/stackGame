@@ -1,12 +1,17 @@
-from machine import getProgram, StackMachine
+from stackLang.machine import StackMachine
 import sys
 from stackLang import parser, ast
-import lexer
+import stackLang.lexer as lexer
 
+with open('stackLang/languageDef.txt') as lang:
+    grammar, _ = lang.readlines()
+    grammar = grammar.strip()
+
+lex = lexer.Lexer('stackLang')
 
 def getProgram(op):
-    sp = parser.LLParser(sys.argv[1])
-    sp.program = lexer.tokenize([op + '.'])
+    sp = parser.LLParser(grammar)
+    sp.program = lex.tokenize([op + '.'])
     cst = sp.parse()
     program = ast.getAst(cst)
     program.print()
@@ -26,7 +31,7 @@ def toDict(string):
 
 def opTest():
     SM = StackMachine()
-    with open('tests/ops', 'r') as ops:
+    with open('stackLang/tests/ops', 'r') as ops:
         for line in ops:
             line = line.strip()
             if not line or '#' in line:
@@ -41,14 +46,14 @@ def opTest():
                 SM.temp = int(line[0])
             SM.stack = start
             prog = getProgram(op)
-            SM.runProgram(prog)
+            SM.runProgram(prog, '')
             if SM.stack != final:
                 raise Exception('Failure in testing %s, expected %s, got %s'%(op, final, SM.stack))
 
 
 def pushPopTest():
     SM = StackMachine()
-    with open('tests/pushpop', 'r') as ops:
+    with open('stackLang/tests/pushpop', 'r') as ops:
         for line in ops:
             line = line.strip()
             if not line or '#' in line:
@@ -69,7 +74,7 @@ def pushPopTest():
             SM.outputs = {0:0, 1:0}
             print('outputs', SM.outputs)
             prog = getProgram(op)
-            SM.runProgram(prog)
+            SM.runProgram(prog, '')
             if SM.stack != final:
                 raise Exception('Failure in testing %s, expected %s, got %s'%(op, final, SM.stack))
             elif SM.outputs != expectedOutput:
@@ -78,32 +83,45 @@ def pushPopTest():
 
 def runProgram(program):
     lines = []
-    with open('languageDef.txt', 'r') as ld:
+    with open('stackLang/languageDef.txt', 'r') as ld:
         for line in ld:
             lines.append(line.strip())
     sp = parser.LLParser(lines[0])
-    sp.loadProgram(program)
+    workingDir = '/'.join(program.split('/')[:-1])
+    sp.loadProgram(program, workingDir)
     cst = sp.parse()
     program = ast.getAst(cst)
     program.print()
     SM = StackMachine()
-    SM.runProgram(program)
+    SM.runProgram(program, workingDir)
     SM.print()
 
-with open('log.txt', 'w+') as f:
-    std, sys.stdout = sys.stdout, f
-    opTest()
-    sys.stdout = std
-    print('OpTest completed with success')
-    std, sys.stdout = sys.stdout, f
-    pushPopTest()
-    sys.stdout = std
-    print('pushPopTest completed with success')
-    for program in ['functions']:
+
+tests = [opTest, pushPopTest, 'stackLang/examples/functions.test']
+
+
+def runTests():
+    with open('log.txt', 'w+') as f:
+        successes = []
         std, sys.stdout = sys.stdout, f
-        runProgram('examples/%s.test'%program)
+        for test in tests:
+            try:
+                if type(test) == str:
+                    runProgram(test)
+                    successes.append(test)
+                else:
+                    test()
+                    successes.append(test.__name__)
+            except Exception:
+                pass
         sys.stdout = std
-        print('functions.stack completed with success')
+        for test in tests:
+            if type(test) != str:
+                test = test.__name__
+            outcome = 'Success' if test in successes else 'Failure'
+            print('{0:<40} {1}'.format(test+':', outcome))
+        return len(successes) == len(tests)
+
 
 
 

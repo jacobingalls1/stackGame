@@ -1,0 +1,95 @@
+#multiplies two elements, a,b
+import utils.stack
+
+fun sub1 1 1
+    push 1
+    sub
+    neg
+    return.
+
+fun multiply 2 1
+    pop @temp
+    push @temp
+    rotate
+    push @top
+    not
+    if @top
+        push 0
+        return.
+    pop output 0
+    sub1
+    while @top
+        split 1
+            sub1
+            .
+            push @temp
+            add
+            .
+            stack
+        .
+    pop output 0
+    return.
+
+routine checkHeight
+    push 1
+    add
+    push @height
+    eq
+    test
+    pop output 0.
+
+routine plusTempIfTopOdd
+    push @top
+    odd
+    if @top
+        pop output 1
+        rotate
+        push @temp
+        add
+        rotate
+        .
+    else
+        pop output 1
+        .
+    .
+
+routine tempTimes2
+    push 1
+    push @temp
+    shift
+    pop @temp
+    .
+
+routine topDiv2
+    split 1
+        .
+        push -1
+        .
+        stack
+    shift
+    .
+
+routine checkHeight2
+    push 2
+    checkHeight
+    .
+
+fun shiftMultiply 2 1
+    pop @temp
+    push 0
+    rotate
+    push 0
+    test
+    while @top
+        topDiv2
+        tempTimes2
+
+        checkHeight2
+
+        plusTempIfTopOdd
+        .
+    pop output 0
+    return.
+
+
+.

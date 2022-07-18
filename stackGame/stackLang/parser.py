@@ -1,12 +1,14 @@
-from lexer import Lexer, Token
-import CFG
+from stackLang.lexer import Lexer, Token
+import stackLang.CFG as CFG
 
 
 class Tree:
-    def __init__(self, parent, content):
+    def __init__(self, parent, content, line, file=''):
         self.parent = parent
         self.content = content
         self.children = []
+        self.line = line
+        self.file = file
 
     def print(self, tabs=0):
         print('\t'*tabs, self.content)
@@ -16,23 +18,19 @@ class Tree:
             else:
                 i.print(tabs+1)
 
-    def getLine(self):
-        for c in self.children:
-            print(c)
-            if c.getLine():
-                return c.getLine()
-        return False
-
 class LLParser:
-    def __init__(self, grammarf):
+    def __init__(self, grammarf, tokenf):
+        self.tokenf = tokenf
         self.program = None
         self.expected = ['Program']
-        self.table = CFG.getTable(grammarf)
-        self.head = Tree(None, 'TREETOP')
+        self.table = CFG.getTable(grammarf, tokenf)
+        self.head = Tree(None, 'TREETOP', -1)
         self.root = self.head
+        self.line = -1
+        self.file = ''
 
     def loadProgram(self, f, workingDir):
-        lexer = Lexer(workingDir)
+        lexer = Lexer(workingDir, self.tokenf)
         self.program = lexer.tokenize(lexer.loadProgram(f))
 
     def doError(self):
@@ -60,6 +58,8 @@ class LLParser:
                 self.head = self.head.parent
                 self.head.children.remove(temp)
             elif self.expected[0] == self.program[0]:
+                self.line = self.program[0].line
+                self.file = self.program[0].file
                 self.head.children.append(self.program.pop(0))
                 self.expected.pop(0)
             elif not (self.program and self.expected):
@@ -77,7 +77,7 @@ class LLParser:
 
     def doStep(self):
         # self.root.print()
-        self.head.children.append(Tree(self.head, self.expected[0]))
+        self.head.children.append(Tree(self.head, self.expected[0], self.line, self.file))
         self.head = self.head.children[-1]
         self.expected = self.expected[1:]
         self.expected = self.exp() + [Token('control', 'treeup', -1)] + self.expected

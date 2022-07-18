@@ -1,0 +1,2 @@
+$@.+-~&%!><=#^/${
+split|swap|stack|merge|while|if|else|return|push|input|output|pop|rotate|add|sub|neg|and|not|or|gt|lt|eq|swap|height|top|temp|dump|in|out|nil|reverse|fun|routine|test|import|odd|shift

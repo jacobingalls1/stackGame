@@ -1,6 +1,7 @@
 from stackLang import parser, ast
 import sys
-import CFG
+import stackLang.CFG as CFG
+# from inspect import getouterframes, currentframe
 
 keyword2symbol = {'add': '+',
         'sub': '-',
@@ -11,32 +12,43 @@ keyword2symbol = {'add': '+',
         'eq': '=',
         'neg': '~',
         'not': '!',
-        'swap': '#',
+        'odd': '#',
         'rotate': '^',
-        'test': '/'}
+        'test': '/',
+        'shift': '{'}
 
 class StackMachine:
     def __init__(self):
         self.inputs = {0:3, 1:6}
         self.outputs = {0:0, 1:0}
         self.stack = []
+        self.calls = []
+        self.stacks = []
         self.temp = 0
         self.functions = {}
         self.returned = False
-        self.nest = 0
         self.workingDir = ''
         self.parser = None
+        self.screen = []
+        self.line = -1
+        self.file = ''
 
-    def print(self):
-        print('\t' * self.nest, 'Stack:',self.stack)
-        print('\t' * self.nest, 'Temp:',self.temp)
-        print('\t' * self.nest, 'Outputs:',self.outputs)
-        print('\t' * self.nest, 'Inputs:',self.inputs)
+    def print(self, caller=None):
+        tab = '\t' * len(self.calls)
+        if caller:
+            print(tab, 'called from %s' % caller)
+        print(tab, 'Stack:', self.stack)
+        print(tab, 'Temp:', self.temp)
+        print(tab, 'Outputs:', self.outputs)
+        print(tab, 'Inputs:', self.inputs)
+        print(tab, 'Screen:', self.screen)
         print()
 
     def update(self):
-        pass
-        self.print()
+        # caller = getouterframes(currentframe(), 2)[1][3]
+        caller = None
+        # return
+        self.print(caller)
 
     def push(self, value):
         self.update()
@@ -44,7 +56,7 @@ class StackMachine:
 
     def input(self, input):
         if input not in self.inputs.keys():
-            raise Exception("Runtime error: there are only %i inputs"%(len(self.inputs.keys())))
+            raise RuntimeError("there are only %i inputs"%(len(self.inputs.keys())))
         else:
             self.push(self.inputs[input])
 
@@ -57,22 +69,26 @@ class StackMachine:
 
     def output(self, output):
         if output not in self.outputs.keys():
-            raise Exception("Runtime error: there are only %i outputs"%(len(self.outputs.keys())))
+            raise RuntimeError("there are only %i outputs"%(len(self.outputs.keys())))
         else:
             p = self.pop()
             if output == 0:
                 return
             if type(p) == bool:
-                raise Exception("Runtime error, tried to pop off the empty stack")
+                raise RuntimeError("tried to pop off the empty stack")
             self.outputs[output] = p
 
     def signalName(self, name):
         if name == 'height':
             return len(self.stack)
         elif name == 'top':
+            if len(self.stack) == 0:
+                raise RuntimeError("tried to access @top of empty stack")
             return self.stack[-1]
         elif name == 'temp':
             return self.temp
+        else:
+            raise RuntimeError('Unrecognized signal name "%s"' % name)
 
     def fundec(self, tree):
         name = tree.children[0].content
@@ -88,28 +104,35 @@ class StackMachine:
         self.functions[name] = [tree]
 
     def funcall(self, tree):
-        self.nest += 1
+        self.line = tree.line
+        self.file = tree.file
         fun = tree.children[0].content
         print('start', fun)
+        self.calls.append((self.line, 'function \'%s\''%fun, self.file))
         if fun not in self.functions:
-            raise Exception('Unknown function %s: line %i'%(fun, tree.children[0].line))
+            raise RuntimeError('Unknown function %s' % fun)
         f = self.functions[fun]
         if len(f) == 3:
             if len(self.stack) < f[0]:
-                raise Exception('Runtime error line %i: %s takes %i items, @height is %i'%(tree.children[0].line, fun, f[0], len(self.stack)))
+                raise RuntimeError('%s takes %i items, @height is %i'
+                                % (fun, f[0], len(self.stack)))
             st = (self.stack[:-f[0]], self.stack[-f[0]:])
+            if f[0] == 0:
+                st = st[::-1]
             self.stack = st[1]
-            self.runProgram(f[2])
+            self.runProgram(f[2], self.workingDir)
             if len(self.stack) < f[1]:
-                 raise Exception('Runtime error line %i: %s expected %i items for return, got %i'%(tree.children[0].line, fun, f[1], len(self.stack)))
+                 raise RuntimeError('%s expected %i items for return, got %i'
+                                 % (fun, f[1], len(self.stack)))
             self.stack = st[0]+self.stack[-f[1]:]
         else:
             self.runProgram(f[0])
+        self.calls.pop()
         print('end', fun)
-        self.nest -= 1
-
 
     def signal(self, tree):
+        self.line = tree.line
+        self.file = tree.file
         if tree.children[0].type == 'symbol': #@
             return self.signalName(tree.children[1].content)
         elif tree.children[0].type == 'name*':
@@ -124,14 +147,20 @@ class StackMachine:
 
     def splitst(self, tree):
         split = int(tree.children[0].content)
-        stacks = (self.stack[:split], self.stack[split:])
+        stacks = [self.stack[:split], self.stack[split:]]
+        print('stacks', split, stacks, self.stack)
         for c in tree.children[1:-1]:
-            if c.content.symbol == 'Op1_':
-                self.stack = stacks[1]
-                self.dispatch(c.children[0])
-            elif c.content.symbol == 'Op2_':
+            print(c.content.symbol)
+            if c.content.symbol == 'Stmts1':
                 self.stack = stacks[0]
-                self.dispatch(c.children[1])
+                for child in c.children:
+                    self.dispatch(child)
+                stacks[0] = self.stack
+            if c.content.symbol == 'Stmts2':
+                self.stack = stacks[1]
+                for child in c.children:
+                    self.dispatch(child)
+                stacks[1] = self.stack
         close = tree.children[-1].content
         if close == 'reverse':
             self.stack = stacks[1] + stacks[0]
@@ -157,9 +186,12 @@ class StackMachine:
                 self.dispatch(c)
 
     def binaryop(self, tree):
+        self.line = tree.line
+        self.file = tree.file
         a, b = self.pop(), self.pop()
         if not (type(a) == int and type(b) == int):
-            raise RuntimeError('Line %i: tried to pop off the empty stack for %s'%(tree.children[0].line, tree.children[0].content))
+            raise RuntimeError('tried to pop off the empty stack for %s'
+                               % tree.children[0].content)
         op = tree.children[0].content
         if len(op) > 1:
             op = keyword2symbol[op]
@@ -177,12 +209,19 @@ class StackMachine:
             self.push(int(a < b))
         elif op == '=':
             self.push(int(a == b))
+        elif op == '{':
+            if b < 0:
+                self.push(int(a >> -b))
+            else:
+                self.push(int(a << b))
         else:
-            raise RuntimeError("unknown binary operator %s"%op)
+            raise RuntimeError("unknown binary operator %s" % op)
 
     def unaryop(self, tree):
+        self.line = tree.line
+        self.file = tree.file
         op = tree.children[0].content
-        if len(op) > 1:
+        if op in keyword2symbol.keys():
             op = keyword2symbol[op]
         if op == '^' and self.signalName('height') == 0:
             return
@@ -192,17 +231,21 @@ class StackMachine:
         elif op == '!':
             self.push(0 if a else 1)
         elif op == '#':
-            self.push(self.temp)
+            self.push(0 if a % 2 else 1)
             self.temp = a
         elif op == '^':
             self.stack = [a] + self.stack
+        elif op == 'printc':
+            self.screen.append(chr(a))
+        elif op == 'printn':
+            self.screen.append(str(a))
         elif op == '/':
             if a:
-                pass
+                print('test successful')
             else:
-                raise RuntimeError('Line %i: tested negative'%tree.children[0].line)
+                raise RuntimeError('tested negative')
         else:
-            raise RuntimeError("unknown unary operator %s"%op)
+            raise RuntimeError("unknown unary operator %s" % op)
 
     def pushop(self, tree):
         if tree.children[0].type == 'symbol':#@
@@ -221,7 +264,7 @@ class StackMachine:
                 self.temp = t
                 return
             else:
-                raise RuntimeError("line %i: tried to pop off the empty stack"%tree.children[0].line)
+                raise RuntimeError("tried to pop off the empty stack")
         self.output(int(tree.children[1].content))
 
     def returnst(self, tree):
@@ -229,11 +272,16 @@ class StackMachine:
 
     def importst(self, tree):
         try:
-            print(self.getProgram(program=self.workingDir + '/' + tree.children[1].content))
+            self.calls.append((self.line, 'file ' + tree.children[1].content, self.file))
+            self.runProgram(*self.getProgram(program=self.workingDir + '/' + tree.children[1].content))
+            self.calls.pop()
         except FileNotFoundError:
-            raise RuntimeError('Line %i: Attempted to import %s, could not find file'%(tree.children[0].line, tree.children[1].content))
+            raise RuntimeError('Attempted to import %s, could not find file'
+                               % tree.children[1].content)
 
     def dispatch(self, tree):
+        self.line = tree.line
+        self.file = tree.file
         if tree.content.symbol == 'Whilest':
             self.whilest(tree)
         elif tree.content.symbol == 'Splitst':
@@ -259,40 +307,59 @@ class StackMachine:
         elif tree.content.symbol == 'Importst':
             self.importst(tree)
         else:
-            raise Exception("runtime error, unknown name: %s" % tree.content.symbol)
+            raise RuntimeError("runtime error, unknown name: %s" % tree.content.symbol)
 
-    def runProgram(self, program, workingDir):
+    def doRunProgram(self, program, workingDir=None):
+        if workingDir is None:
+            workingDir = self.workingDir
         self.workingDir = workingDir
         for c in program.children:
             self.dispatch(c)
             if self.returned:
                 self.returned = False
                 if not self.stack:
-                    raise Exception('Tried to return from empty stack, line %i' % c.line())
+                    raise RuntimeError('Tried to return from empty stack')
+                self.update()
                 break
         return
 
-    def getProgram(self, grammar=None, program=None):
+    def runProgram(self, program, workingDir=None):
+        try:
+            self.doRunProgram(program, workingDir)
+        except RuntimeError as e:
+            print('Traceback:')
+            files = {}
+            for c in self.calls:
+                location = c[1].split(' ')
+                if location[0] == 'file':
+                    location = 'in main body'
+                else:
+                    location = 'in function %s' % location[1]
+                print("Line %i in file %s %s" % (c[0], c[2], location))
+                if c[2] not in files.keys():
+                    with open(c[2], 'r') as fIn:
+                        files[c[2]] = fIn.readlines()
+                    print('\t', files[c[2]][c[0]-1])
+            print("RuntimeError:", e.args[0])
+            exit(2)
+
+    def getProgram(self, grammar=None, tokens=None, program=None):
         lines = []
-        with open('languageDef.txt', 'r') as ld:
+        with open('stackLang/stackLang/languageDef.txt', 'r') as ld:
             for line in ld:
                 lines.append(line.strip())
         if grammar:
             lines[0] = grammar
         if program:
-            lines[1] = program
-        print('l1, "%s"'%lines[1])
-        if not self.parser:
-            self.parser = parser.LLParser(lines[0])
-        workingDir = '/'.join(lines[1].split('/')[:-1])
-        self.parser.loadProgram(lines[1], workingDir)
-        print(self.parser.program)
-        cst = self.parser.parse()
+            lines[2] = program
+        llParser = parser.LLParser(lines[0], lines[1])
+        workingDir = '/'.join(lines[2].split('/')[:-1])
+        llParser.loadProgram(lines[2], workingDir)
+        cst = llParser.parse()
         program = ast.getAst(cst)
-        # program.print()
         return program, workingDir
 
-
-SM = StackMachine()
-SM.runProgram(*SM.getProgram())
-SM.print()
+if __name__ == '__main__':
+    SM = StackMachine()
+    SM.runProgram(*SM.getProgram())
+    SM.print()

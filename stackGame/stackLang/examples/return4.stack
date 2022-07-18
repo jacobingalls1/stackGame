@@ -1,4 +1,0 @@
-fun return4 0 1
-    push 4
-    return.
-.

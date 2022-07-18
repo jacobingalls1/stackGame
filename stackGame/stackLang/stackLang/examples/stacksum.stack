@@ -1,0 +1,44 @@
+routine stacksum
+    pop @temp
+    while @height
+        push @temp
+        add
+        pop @temp
+        .
+    push @temp
+    return
+    .
+
+push 1
+push 5
+push 4
+stacksum
+push 10
+eq
+test
+
+fun mult 2 1
+    pop @temp
+    push 1
+    push @temp
+    sub
+    while @top
+        push 1
+        sub
+        neg
+        pop @temp
+        push @top
+        push @temp
+        .
+    stacksum
+    return
+    .
+
+
+push 3
+push 4
+mult
+push 12
+eq
+test
+.

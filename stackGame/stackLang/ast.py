@@ -1,7 +1,7 @@
-from lexer import Token
+from stackLang.lexer import Token
 
 redundant = ['push', 'pop', 'while', 'if', 'else', 'split', '$', '.', 'fun', 'routine']
-save = ['BinaryOp', 'UnaryOp', 'PushOp', 'PopOp', 'FunCall', 'Returnst', 'Op1_', 'Op2_']
+save = ['BinaryOp', 'UnaryOp', 'PushOp', 'PopOp', 'FunCall', 'Returnst', 'Stmts1', 'Stmts2']
 
 def reduce(tree):
     change = False

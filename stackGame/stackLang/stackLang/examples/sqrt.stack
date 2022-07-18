@@ -1,0 +1,15 @@
+import stacksum.stack
+
+fun square 1 1
+    push @top
+    mult
+    return.
+
+fun sqrt 1 1
+    return.
+
+push 4
+square
+push 16
+valid
+.

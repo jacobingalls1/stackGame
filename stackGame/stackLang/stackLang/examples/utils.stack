@@ -14,14 +14,20 @@ routine stacksum
         sub
         .
     push @temp
+    sub
     return
     .
 
-push 1
-push 5
-push 4
-stacksum
-push 10
-eq
-test
+routine clear
+    stacksum
+    pop output 0.
+
+fun even 1 1
+    odd
+    not
+    return.
+
+fun valid 2 0
+    eq
+    test.
 .

@@ -2,20 +2,21 @@ import re
 import sys
 from os.path import exists
 
-symbol = '$@.+-~&%!><=#^/'
+# symbol = '$@.+-~&%!><=#^/${'
 
-keyword = r'split|swap|stack|merge|while|if|else|return|push|input|output|pop|rotate|add|sub|neg|and|not|or|gt|lt|eq|swap|height|top|temp|dump|in|out|nil|reverse|fun|routine|test|import'
+# keyword = r'split|swap|stack|merge|while|if|else|return|push|input|output|pop|rotate|add|sub|neg|and|not|or|gt|lt|eq|swap|height|top|temp|dump|in|out|nil|reverse|fun|routine|test|import|odd|shift'
 
-numberLiteral = r'0|[1-9][0-9]*'
+numberLiteral = r'0|-?[1-9][0-9]*'
 
 name = r'[a-zA-Z]([a-zA-Z0-9\.])*'
 
 
 class Token(object):
-    def __init__(self, typ, content=None, line=-1):
+    def __init__(self, typ, content=None, line=-1, file=None):
         self.type = typ
         self.content = content
         self.line = line
+        self.file = file
 
     def __repr__(self):
         return '(%s, %s, %i)' % (self.type, self.content, self.line)
@@ -43,10 +44,15 @@ class Token(object):
         return self.line
 
 class Lexer:
-    def __init__(self, workingDir):
+    def __init__(self, workingDir, tokenf):
+        with open(tokenf, 'r') as toks:
+            self.symbols = toks.readline()
+            self.keywords = toks.readline()
         self.workingDir = workingDir
+        self.fName = None
 
     def loadProgram(self, fileName):
+        self.fName = fileName
         ret = []
         with open(fileName) as f:
             ignore = False
@@ -59,36 +65,34 @@ class Lexer:
                 ret.append(line.strip().split('#')[0])
         return ret
 
-
     def tokSpace(self, tok, line):
         ret = []
         while tok:
-            if tok[0] in symbol:
-                ret.append(Token('symbol', tok[0], line))
-                tok = tok[1:]
-                continue
-            x = re.match(keyword, tok)
-            if x and (len(tok) == x.end() or tok[x.end()] in  ' '+symbol):
-                ret.append(Token('keyword', tok[:x.end()], line))
-                tok = tok[x.end():]
-                continue
             x = re.match(numberLiteral, tok)
             if x:
-                ret.append(Token('numberLiteral*', int(tok[:x.end()]), line))
+                ret.append(Token('numberLiteral*', int(tok[:x.end()]), line, self.fName))
+                tok = tok[x.end():]
+                continue
+            if tok[0] in self.symbols:
+                ret.append(Token('symbol', tok[0], line, self.fName))
+                tok = tok[1:]
+                continue
+            x = re.match(self.keywords, tok)
+            if x and (len(tok) == x.end() or tok[x.end()] in  ' '+self.symbols):
+                ret.append(Token('keyword', tok[:x.end()], line, self.fName))
                 tok = tok[x.end():]
                 continue
             x = re.match(name, tok)
             if x:
                 if exists(self.workingDir + '/' + tok[:x.end()]):
-                    ret.append(Token('fname*', tok[:x.end()], line))
+                    ret.append(Token('fname*', tok[:x.end()], line, self.fName))
                     tok = tok[x.end():]
                     continue
-                ret.append(Token('name*', tok[:x.end()], line))
+                ret.append(Token('name*', tok[:x.end()], line, self.fName))
                 tok = tok[x.end():]
                 continue
             return False
         return ret
-
 
     def tokenize(self, program):
         lineCount = 1
@@ -106,7 +110,6 @@ class Lexer:
             lineCount += 1
         ret.append(Token('symbol', '$', lineCount))
         return ret
-
 
     def matchToken(self, s):
         if s[-1] == '*':

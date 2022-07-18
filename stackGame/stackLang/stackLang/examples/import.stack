@@ -1,4 +1,4 @@
-import return4.stack
+import functions.stack
 
 push 10
 fib
