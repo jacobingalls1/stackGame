@@ -65,6 +65,18 @@ class Lexer:
                 ret.append(line.strip().split('#')[0])
         return ret
 
+    def loadProgramFromText(self, text):
+        ignore = False
+        ret = []
+        for line in text.split('\n'):
+            if "'''" in line:
+                ignore = not ignore
+                continue
+            if ignore:
+                continue
+            ret.append(line.strip().split('#')[0])
+        return ret
+
     def tokSpace(self, tok, line):
         ret = []
         while tok:

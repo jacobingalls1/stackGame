@@ -4,7 +4,7 @@ from stackLang import parser, ast
 import stackLang.lexer as lexer
 
 with open('stackLang/languageDef.txt') as lang:
-    grammar, _ = lang.readlines()
+    grammar, _, _ = lang.readlines()
     grammar = grammar.strip()
 
 lex = lexer.Lexer('stackLang')

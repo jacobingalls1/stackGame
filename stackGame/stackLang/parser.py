@@ -33,6 +33,10 @@ class LLParser:
         lexer = Lexer(workingDir, self.tokenf)
         self.program = lexer.tokenize(lexer.loadProgram(f))
 
+    def loadProgramFromText(self, text):
+        lexer = Lexer('', self.tokenf)
+        self.program = lexer.tokenize(lexer.loadProgramFromText(text))
+
     def doError(self):
         self.printTree(self.root, [])
         raise Exception('Token error, line %i: \n\tunexpected token in %s: \n\t\t%s\n\texpected %s'%

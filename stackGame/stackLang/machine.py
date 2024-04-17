@@ -359,6 +359,23 @@ class StackMachine:
         program = ast.getAst(cst)
         return program, workingDir
 
+    def getProgramFromText(self, text, grammar=None, tokens=None, program=None):
+        lines = []
+        with open('/home/ophiuchus/Documents/stackGame/stackGame/stackLang/stackLang/languageDef.txt', 'r') as ld:
+            for line in ld:
+                lines.append(line.strip())
+        if grammar:
+            lines[0] = grammar
+        if program:
+            lines[2] = program
+        llParser = parser.LLParser(lines[0], lines[1])
+        workingDir = '/'.join(lines[2].split('/')[:-1])
+        llParser.loadProgramFromText(text)
+        cst = llParser.parse()
+        program = ast.getAst(cst)
+        return program, workingDir
+
+
 if __name__ == '__main__':
     SM = StackMachine()
     SM.runProgram(*SM.getProgram())
